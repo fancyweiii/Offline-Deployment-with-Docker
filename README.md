@@ -483,6 +483,8 @@ COPY --from=builder /openMVS-install/ /usr/local/
 COPY --from=builder /usr/local /usr/local
 
 RUN ln -s /usr/local/bin/OpenMVS/* /usr/local/bin/
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && ldconfig
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 ```
 
 ...

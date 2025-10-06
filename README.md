@@ -480,6 +480,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=builder /colmap-install/ /usr/local/
 COPY --from=builder /openMVS-install/ /usr/local/
+COPY --from=builder /usr/local /usr/local
+
+RUN ln -s /usr/local/bin/OpenMVS/* /usr/local/bin/
 ```
 
 ...
@@ -493,7 +496,7 @@ COPY --from=builder /openMVS-install/ /usr/local/
 最后保存镜像
 
 ```
-docker save -o colmap_arm64.tar colmap:arm64
+docker save -o colmap_openmvs_arm64.tar colmap_openmvs:arm64
 ```
 
 同上在目标机器加载镜像

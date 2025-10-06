@@ -1,6 +1,6 @@
 # Offline-Deployment-with-Docker
 
-出于某些原因，某些程序需要部署到离线机器，由于解决依赖过于折磨，故整理了部分文档到此readme中，以cpu版本的三维重建为例
+出于某些原因，某些程序需要部署到离线机器，由于解决依赖过于折磨，故整理了网络上部分文档到此readme中，以cpu版本的三维重建为例
 
 ## Docker
 
@@ -228,7 +228,7 @@ docker run -it \
     colmap:offline bash
 ```
 
-**服务器可能没有可用的显示服务器（X11）或虚拟 OpenGL 环境，需要额外配置**
+**服务器可能没有可用的显示服务器（X11）或虚拟 OpenGL 环境，需要额外配置，记得设置不使用gpu进行特征提取和匹配**
 
 ```
 export QT_QPA_PLATFORM='offscreen'

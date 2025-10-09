@@ -105,6 +105,47 @@ systemctl enable docker
 docker -v
 ```
 
+### GPU容器配置
+
+#### 在线安装
+
+container toolkit安装
+
+```
+# 添加仓库源
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+```
+
+```
+sudo apt-get update
+
+export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.17.8-1
+  sudo apt-get install -y \
+      nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+      nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+      libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+      libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
+```
+
+配置
+
+```
+sudo nvidia-ctk runtime configure --runtime=docker
+
+sudo systemctl restart docker
+```
+
+#### 离线安装
+
+在联网设备提前准备安装包，上述`apt-get install`更改为`apt download`将安装包打包到离线设备进行安装，并进行配置
+
+#### gpu挂载
+
+运行nvidia docker容器时添加`--rm --gpus all`挂载设备gpu至容器，例如: `docker run -it --rm --gpus all -v /mnt/e/code/kl/wx:/workspace colmap:gpu bash`
+
 ## Docker-compose
 
 
@@ -227,6 +268,8 @@ docker run -it \
     -v /data:/workspace \
     colmap:offline bash
 ```
+
+容器可能会出现权限不足的情况，使用sudo，并添加参数`--privileged`进行解决，例如：`sudo docker run -it --privileged -v /data:/workspace colmap:offline bash`
 
 **服务器可能没有可用的显示服务器（X11）或虚拟 OpenGL 环境，需要额外配置，记得设置不使用gpu进行特征提取和匹配**
 
